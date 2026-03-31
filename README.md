@@ -11,7 +11,7 @@ Deep Q-Network agent trained on Atari Gravitar using Stable-Baselines3 and Gymna
 
 Generated at runtime:
 - `models/` — Trained model archives (`.zip`)
-- `logs/breakout_dqn/` — TensorBoard event files
+- `logs/gravitar_dqn/` — TensorBoard event files
 
 ---
 
@@ -125,7 +125,7 @@ python gravitar_dqn.py --mode inspect --model-path models/gravitar_best
 In a separate terminal:
 
 ```bash
-tensorboard --logdir logs/breakout_dqn/sweep --port 6006
+tensorboard --logdir logs/gravitar_dqn/sweep --port 6006
 ```
 
 Then open in browser: `http://localhost:6006`
@@ -180,7 +180,7 @@ After training:
 models/
   └── gravitar_best.zip          # Best trained model
   
-logs/breakout_dqn/
+logs/gravitar_dqn/
   └── sweep/
       ├── exp_01_baseline/
       │   ├── seed_42/

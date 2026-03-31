@@ -453,7 +453,7 @@ def inspect_model(model_path: str) -> None:
         model_path: Path to the saved model (with or without .zip extension).
 
     Example:
-        python breakout_dqn.py --mode inspect --model-path models/breakout_dqn
+        python gravitar_dqn.py --mode inspect --model-path models/gravitar_dqn
     """
     if not os.path.exists(f"{model_path}.zip"):
         raise FileNotFoundError(f"Model not found: {model_path}.zip")
@@ -506,7 +506,7 @@ def parse_args() -> argparse.Namespace:
              "Uses built-in defaults when omitted.",
     )
     parser.add_argument(
-        "--model-path", default="models/breakout_dqn",
+        "--model-path", default="models/gravitar_dqn",
         help="Path to save (train) or load (play) the model (without .zip).",
     )
     parser.add_argument(
@@ -520,7 +520,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
-        "--tensorboard-log", default="logs/breakout_dqn",
+        "--tensorboard-log", default="logs/gravitar_dqn",
         help="Directory for TensorBoard logs.",
     )
     return parser.parse_args()

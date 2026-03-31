@@ -1,5 +1,5 @@
 [project]
-name = "deb-breakout"
+name = "deb-gravitar"
 version = "0.1.0"
 description = "THis is a simple game solutioner"
 authors = [
