@@ -1,0 +1,102 @@
+========================================
+INSTALLATION (GIT BASH - WINDOWS)
+========================================
+
+# Crear entorno virtual
+py -m venv venv_gravitar
+
+# Activar entorno
+source venv_gravitar/Scripts/activate
+
+# Verificar que esté activo (debe aparecer (venv_gravitar))
+python --version
+
+# Actualizar pip
+py -m pip install --upgrade pip setuptools wheel
+
+# Instalar librerías (formato bash correcto)
+py -m pip install \
+numpy \
+torch \
+"stable-baselines3[extra]>=2.3,<3" \
+"gymnasium[atari,accept-rom-license]>=0.29.1,<1.1.0" \
+"ale-py==0.10.1" \
+"autorom[accept-rom-license]" \
+"opencv-python>=4.8" \
+tqdm \
+rich \
+tensorboard
+
+# Descargar ROMs Atari (COMANDO CORRECTO)
+AutoROM --accept-license
+
+# Testear entorno (SIN símbolos raros)
+py -c "import gymnasium as gym; import ale_py; gym.register_envs(ale_py); env = gym.make('ALE/Gravitar-v5'); print('Gravitar ready'); env.close()"
+
+
+========================================
+USO
+========================================
+
+# Activar entorno SIEMPRE antes de correr
+source venv_gravitar/Scripts/activate
+
+
+----------------------------------------
+Test rápido (~1 min)
+----------------------------------------
+py gravitar_dqn.py --mode train --model-path models/test --timesteps 10000
+
+
+----------------------------------------
+Entrenar modelo
+----------------------------------------
+py gravitar_dqn.py --mode train --model-path models/gravitar_g4
+
+
+----------------------------------------
+Sweep completo (RECOMENDADO)
+----------------------------------------
+py gravitar_dqn.py --mode sweep --sweep-file sweep_configs.json --model-path models/gravitar_best
+
+
+----------------------------------------
+Ver agente jugar
+----------------------------------------
+py gravitar_dqn.py --mode play --model-path models/gravitar_best --episodes 5
+
+
+----------------------------------------
+Inspeccionar modelo
+----------------------------------------
+py gravitar_dqn.py --mode inspect --model-path models/gravitar_best
+
+
+----------------------------------------
+TensorBoard
+----------------------------------------
+tensorboard --logdir logs/gravitar_dqn/sweep --port 6006
+
+# Abrir en navegador:
+http://localhost:6006
+
+
+========================================
+ERRORES COMUNES (YA CORREGIDOS)
+========================================
+
+# 1. NO usar ^
+# (eso es de CMD, no de Git Bash)
+
+# 2. NO usar backslash \
+# usar slash /
+source venv_gravitar/Scripts/activate
+
+# 3. AutoROM correcto:
+AutoROM --accept-license
+
+# 4. NO usar caracteres raros:
+# ✓ → ❌
+# usar texto normal
+
+# 5. Siempre usar py -m pip (más seguro)
