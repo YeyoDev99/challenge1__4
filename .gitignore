@@ -1,0 +1,7 @@
+venv_gravitar/
+__pycache__/
+models/
+logs/
+*.zip
+.DS_Store
+EOF

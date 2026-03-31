@@ -1,0 +1,72 @@
+[
+  {
+    "name": "exp_01_baseline",
+    "note": "Baseline: default hyperparameters. Learning rate standard para 300k steps.",
+    "timesteps": 300000,
+    "learning_rate": 1e-4,
+    "buffer_size": 50000,
+    "learning_starts": 10000,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.15,
+    "exploration_final_eps": 0.01
+  },
+  {
+    "name": "exp_02_large_buffer",
+    "note": "Large buffer (200k) + conservative learning: mejor para exploración en Gravitar.",
+    "timesteps": 300000,
+    "learning_rate": 5e-5,
+    "buffer_size": 200000,
+    "learning_starts": 15000,
+    "batch_size": 32,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 1500,
+    "exploration_fraction": 0.20,
+    "exploration_final_eps": 0.01
+  },
+  {
+    "name": "exp_03_high_lr",
+    "note": "High learning rate (2e-4) + pequeño buffer: converge rápido, riesgo de inestabilidad.",
+    "timesteps": 300000,
+    "learning_rate": 2e-4,
+    "buffer_size": 50000,
+    "learning_starts": 8000,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 800,
+    "exploration_fraction": 0.10,
+    "exploration_final_eps": 0.01
+  },
+  {
+    "name": "exp_04_medium_balance",
+    "note": "Balance: learning_rate=1e-4, buffer=100k, batch=64. Término medio conservador.",
+    "timesteps": 300000,
+    "learning_rate": 1e-4,
+    "buffer_size": 100000,
+    "learning_starts": 12000,
+    "batch_size": 64,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 1200,
+    "exploration_fraction": 0.15,
+    "exploration_final_eps": 0.01
+  },
+  {
+    "name": "exp_05_small_batch_deep_exploration",
+    "note": "Small batch (32) + moderate lr + extended exploration: mejor gradientes para Gravitar.",
+    "timesteps": 300000,
+    "learning_rate": 1e-4,
+    "buffer_size": 100000,
+    "learning_starts": 10000,
+    "batch_size": 32,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.20,
+    "exploration_final_eps": 0.02
+  }
+]
