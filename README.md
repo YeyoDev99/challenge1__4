@@ -17,7 +17,7 @@ Generated at runtime:
 
 ## Installation
 
-### KALI LINUX (Yader)
+### KALI LINUX 
 
 Copy and paste all commands below in order:
 
@@ -46,7 +46,7 @@ python -m autorom --accept-rom-license
 python -c "import gymnasium as gym; import ale_py; gym.register_envs(ale_py); env = gym.make('ALE/Gravitar-v5'); print('✓ Gravitar ready'); env.close()"
 ```
 
-### WINDOWS 11 (Diego and Rosa)
+### WINDOWS 11 
 
 Open PowerShell **as Administrator** and copy-paste all commands:
 

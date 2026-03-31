@@ -3,7 +3,9 @@ name = "deb-gravitar"
 version = "0.1.0"
 description = "THis is a simple game solutioner"
 authors = [
-    {name = "Prof. Carlos Andres Sierra",email = "cavirguezs@udistrital.edu.co"}
+    {name = "Yader Ibraldo Quiroga Torres", email = "yiquirogat@udistrital.edu.co"},
+    {name = "Rosa Alejandra Lopez Lizarazo", email = "@udistrital.edu.co"},
+    {name = "Diego Alejandro Garzon Rodriguez", email = "@udistrital.edu.co"}
 ]
 license = {text = "GNU/GPL 3.0"}
 requires-python = ">=3.11"
