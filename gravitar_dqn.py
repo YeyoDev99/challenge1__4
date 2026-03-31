@@ -243,7 +243,7 @@ def train_agent(
     )
     model.save(model_path)
     env.close()
-    print(f"Model saved → {model_path}.zip")
+    print(f"Model saved - > {model_path}.zip")
 
     # Return mean episode reward over the last recorded episodes.
     # SB3 maintains ep_info_buffer (deque of {r, l, t} dicts) during training.

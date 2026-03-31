@@ -1,4 +1,4 @@
-# Gravitar DQN — Challenge 1 Machine Learning (Grupo 4)
+# Gravitar DQN — Challenge 1 Machine Learning (Group 4)
 
 Deep Q-Network agent trained on Atari Gravitar using Stable-Baselines3 and Gymnasium.
 
