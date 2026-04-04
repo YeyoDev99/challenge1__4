@@ -125,7 +125,7 @@ python gravitar_dqn.py --mode inspect --model-path models/gravitar_best
 In a separate terminal:
 
 ```bash
-tensorboard --logdir logs/gravitar_dqn/sweep --port 6006
+tensorboard --logdir logs/gravitar_dqn
 ```
 
 Then open in browser: `http://localhost:6006`
