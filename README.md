@@ -125,7 +125,7 @@ python gravitar_dqn.py --mode inspect --model-path models/gravitar_best
 In a separate terminal:
 
 ```bash
-tensorboard --logdir logs/gravitar_dqn/sweep --port 6006
+tensorboard --logdir logs/gravitar_dqn
 ```
 
 Then open in browser: `http://localhost:6006`
@@ -239,7 +239,18 @@ Modify hyperparameters in `sweep_configs.json`:
 - **exploration_final_eps**: Minimum exploration rate (0.01 = always 1% random)
 
 ---
+## Video
+[Watch video on YouTube](https://www.youtube.com/watch?v=1oCn1QFCEjQ)
+#### Contents
 
+*   **0:00 - Technical Architecture & Preprocessing**: The project uses **Stable Baselines3** and the **DQN algorithm** to interface with the Atari environment. A **CNN policy** processes visual inputs, and an Atari pipeline resizes frames to **84x84 grayscale** to reduce the memory footprint.
+*   **2:00 - Frame Stacking & Parameter Sweeps**: Implementing **four-frame stacking** allows the agent to infer **motion and direction**, which is critical to counteracting Gravitar's gravity and inertia. The team used a **JSON-based sweep methodology** to test five distinct experimental configurations.
+*   **3:10 - Gravitar Environment Challenges**: Gravitar is described as a "challenging environment" where the agent must manage **inertia and gravitational forces**. Because **rewards are sparse**, the agent's learning depends heavily on exploration and the ability to reuse important experiences.
+*   **4:05 - Comparative Performance Analysis**: Evaluation of five experiments showed that **Experiment X02** (large replay buffer) was the most stable and consistent. In contrast, **X03** (high learning rate) and **X05** (small batch size) resulted in **instability and noisy updates**.
+*   **6:25 - Best Configuration & Scoring**: The most successful configuration was trained for **1 million iterations** with high exploration. This setup achieved an average of **500 points** and a peak of **2,000 points** in a single episode after successfully completing a planet.
+*   **7:40 - Tensorboard Visualizations & Death Penalties**: Analysis of **Tensorboard metrics** shows a significant performance difference at 1 million iterations. The team also found that **penalizing the agent for dying** was counterproductive, as the agent became too "afraid" to move, resulting in no points at all.
+
+---
 ## Author & License
 
 **Challenge:** Machine Learning — Atari DQN  
