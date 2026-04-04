@@ -68,5 +68,18 @@
     "target_update_interval": 1000,
     "exploration_fraction": 0.20,
     "exploration_final_eps": 0.02
-  }
+  },
+  {
+  "name": "exp_best",
+  "timesteps": 1000000,
+  "learning_rate": 1e-5,
+  "buffer_size": 100000,
+  "learning_starts": 20000,
+  "batch_size": 64,
+  "gamma": 0.99,
+  "train_freq": 4,
+  "target_update_interval": 2000,
+  "exploration_fraction": 0.2,
+  "exploration_final_eps": 0.02
+  } 
 ]

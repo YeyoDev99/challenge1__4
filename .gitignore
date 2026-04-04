@@ -1,7 +1,9 @@
 venv_gravitar/
 __pycache__/
-models/
-logs/
-*.zip
 .DS_Store
 EOF
+logs/*
+models/*
+!logs/gravitar_dqn/DQN_8/
+!logs/gravitar_dqn/DQN_8/**
+!models/best.zip

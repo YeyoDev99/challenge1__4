@@ -4,8 +4,8 @@ version = "0.1.0"
 description = "THis is a simple game solutioner"
 authors = [
     {name = "Yader Ibraldo Quiroga Torres", email = "yiquirogat@udistrital.edu.co"},
-    {name = "Rosa Alejandra Lopez Lizarazo", email = "@udistrital.edu.co"},
-    {name = "Diego Alejandro Garzon Rodriguez", email = "@udistrital.edu.co"}
+    {name = "Rosa Alejandra Lopez Lizarazo", email = "ralopez@udistrital.edu.co"},
+    {name = "Diego Alejandro Garzon Rodriguez", email = "dagarzon@udistrital.edu.co"}
 ]
 license = {text = "GNU/GPL 3.0"}
 requires-python = ">=3.11"
