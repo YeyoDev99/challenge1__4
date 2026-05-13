@@ -2,15 +2,19 @@
 
 Deep Q-Network (DQN) and Proximal Policy Optimization (PPO) agents trained on Atari Gravitar using Stable-Baselines3 and Gymnasium.
 
-## Project Files
+## Project Structure
 
-**Challenge 1 (DQN):**
+**Root (Challenge 1 - DQN):**
 - `gravitar_dqn.py` — Main DQN training script (train, play, sweep, inspect modes)
 - `sweep_configs.json` — 5 optimized DQN hyperparameter configurations
 
-**Challenge 3 (PPO):**
+**challenge3/group4/ (Challenge 3 - PPO):**
 - `gravitar_ppo.py` — Main PPO training script (train, play, sweep, inspect modes)
-- `sweep_configs_ppo.json` — 5 optimized PPO hyperparameter configurations
+- `sweep_configs_ppo.json` — 9 optimized PPO hyperparameter configurations
+- `CHECKLIST.md` — Training commands, seeds, and comparative summary
+- `comparative_analysis_dqn_vs_ppo.md` — Comparative analysis template
+- `ieee_paper_dqn_to_ppo_gravitar.md` — IEEE paper template
+- `Challenge3.md` — Challenge 3 requirements document
 
 **Shared:**
 - `README.md` — Complete installation and usage guide (this file)
@@ -135,31 +139,36 @@ python gravitar_dqn.py --mode inspect --model-path models/gravitar_best
 ### Quick Test PPO (1 minute)
 
 ```bash
-python gravitar_ppo.py --mode train --model-path models/test_ppo --timesteps 10000
+cd challenge3/group4
+python gravitar_ppo.py --mode train --model-path ../../models/test_ppo --timesteps 10000
 ```
 
 ### Train Single PPO Model (5M steps, ~12-18h CPU / ~3-4h GPU)
 
 ```bash
-python gravitar_ppo.py --mode train --model-path models/gravitar_ppo_g4
+cd challenge3/group4
+python gravitar_ppo.py --mode train --model-path ../../models/gravitar_ppo_g4
 ```
 
 ### Run Full PPO Sweep (9 experiments × 3 seeds, ~36-54h CPU / ~9-12h GPU)
 
 ```bash
-python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-path models/gravitar_ppo_best
+cd challenge3/group4
+python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-path ../../models/gravitar_ppo_best
 ```
 
 ### Watch Trained PPO Agent (requires display)
 
 ```bash
-python gravitar_ppo.py --mode play --model-path models/gravitar_ppo_best --episodes 5
+cd challenge3/group4
+python gravitar_ppo.py --mode play --model-path ../../models/gravitar_ppo_best --episodes 5
 ```
 
 ### Inspect PPO Model Hyperparameters
 
 ```bash
-python gravitar_ppo.py --mode inspect --model-path models/gravitar_ppo_best
+cd challenge3/group4
+python gravitar_ppo.py --mode inspect --model-path ../../models/gravitar_ppo_best
 ```
 
 ### Monitor PPO Training with TensorBoard
