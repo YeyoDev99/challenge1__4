@@ -1,17 +1,25 @@
-# Gravitar DQN — Challenge 1 Machine Learning (Group 4)
+# Gravitar DQN & PPO — Challenge 1 & 3 Machine Learning (Group 4)
 
-Deep Q-Network agent trained on Atari Gravitar using Stable-Baselines3 and Gymnasium.
+Deep Q-Network (DQN) and Proximal Policy Optimization (PPO) agents trained on Atari Gravitar using Stable-Baselines3 and Gymnasium.
 
 ## Project Files
 
-- `gravitar_dqn.py` — Main training script (train, play, sweep, inspect modes)
-- `sweep_configs.json` — 5 optimized hyperparameter configurations
+**Challenge 1 (DQN):**
+- `gravitar_dqn.py` — Main DQN training script (train, play, sweep, inspect modes)
+- `sweep_configs.json` — 5 optimized DQN hyperparameter configurations
+
+**Challenge 3 (PPO):**
+- `gravitar_ppo.py` — Main PPO training script (train, play, sweep, inspect modes)
+- `sweep_configs_ppo.json` — 5 optimized PPO hyperparameter configurations
+
+**Shared:**
 - `README.md` — Complete installation and usage guide (this file)
 - `pyproject.toml` — Project metadata
 
 Generated at runtime:
 - `models/` — Trained model archives (`.zip`)
-- `logs/gravitar_dqn/` — TensorBoard event files
+- `logs/gravitar_dqn/` — DQN TensorBoard event files
+- `logs/gravitar_ppo/` — PPO TensorBoard event files
 
 ---
 
@@ -120,7 +128,57 @@ python gravitar_dqn.py --mode play --model-path models/gravitar_best --episodes 
 python gravitar_dqn.py --mode inspect --model-path models/gravitar_best
 ```
 
-### Monitor Training with TensorBoard
+---
+
+## Challenge 3: PPO (Proximal Policy Optimization)
+
+### Quick Test PPO (1 minute)
+
+```bash
+python gravitar_ppo.py --mode train --model-path models/test_ppo --timesteps 10000
+```
+
+### Train Single PPO Model (5M steps, ~12-18h CPU / ~3-4h GPU)
+
+```bash
+python gravitar_ppo.py --mode train --model-path models/gravitar_ppo_g4
+```
+
+### Run Full PPO Sweep (9 experiments × 3 seeds, ~36-54h CPU / ~9-12h GPU)
+
+```bash
+python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-path models/gravitar_ppo_best
+```
+
+### Watch Trained PPO Agent (requires display)
+
+```bash
+python gravitar_ppo.py --mode play --model-path models/gravitar_ppo_best --episodes 5
+```
+
+### Inspect PPO Model Hyperparameters
+
+```bash
+python gravitar_ppo.py --mode inspect --model-path models/gravitar_ppo_best
+```
+
+### Monitor PPO Training with TensorBoard
+
+In a separate terminal:
+
+```bash
+tensorboard --logdir logs/gravitar_ppo/sweep --port 6006
+```
+
+Key PPO metrics:
+- `rollout/ep_rew_mean` — Rolling average reward (higher is better)
+- `train/policy_loss` — PPO clipped surrogate loss (lower is better)
+- `train/value_loss` — Value function loss (lower is better)
+- `train/entropy_loss` — Entropy bonus (encourages exploration)
+
+---
+
+## Monitor Training with TensorBoard
 
 In a separate terminal:
 
@@ -139,6 +197,8 @@ Key metrics:
 
 ## Hyperparameter Experiments
 
+### DQN (Challenge 1)
+
 5 configurations in `sweep_configs.json`:
 
 | Experiment | LR | Buffer | Batch | Purpose |
@@ -150,6 +210,24 @@ Key metrics:
 | exp_05_small_batch | 1e-4 | 100k | 32 | Rich gradients |
 
 All use 300,000 timesteps per run.
+
+### PPO (Challenge 3)
+
+9 configurations in `sweep_configs_ppo.json` (systematic search of LR, horizon, entropy):
+
+| Experiment | LR | n_steps | Entropy | Purpose |
+|---|---|---|---|---|
+| exp_01_baseline | 2.5e-4 | 1024 | 0.01 | Challenge 3 starter for Gravitar |
+| exp_02_high_lr | 5e-4 | 1024 | 0.01 | Test faster learning |
+| exp_03_low_lr | 1e-4 | 1024 | 0.01 | Test stable learning |
+| exp_04_short_horizon | 2.5e-4 | 512 | 0.01 | More frequent updates |
+| exp_05_long_horizon | 2.5e-4 | 2048 | 0.01 | Better credit assignment |
+| exp_06_high_entropy | 2.5e-4 | 1024 | 0.02 | More exploration |
+| exp_07_low_entropy | 2.5e-4 | 1024 | 0.001 | More exploitation |
+| exp_08_high_lr_high_entropy | 5e-4 | 1024 | 0.02 | Aggressive exploration |
+| exp_09_long_horizon_high_entropy | 2.5e-4 | 2048 | 0.02 | Recommended for Gravitar |
+
+All use 5,000,000 timesteps per run (Challenge 3 budget).
 
 ---
 
@@ -163,6 +241,16 @@ All use 300,000 timesteps per run.
 - ε-greedy exploration: 90% best action, 10% random (decays over time)
 - Target network sync every 1000 steps (stabilizes learning)
 
+**Proximal Policy Optimization (PPO):**
+- Actor-Critic architecture with CNN base for Atari images
+- Actor (policy network): outputs action probabilities
+- Critic (value network): estimates state value V(s)
+- Clipped surrogate objective prevents large policy updates
+- Generalized Advantage Estimation (GAE) for advantage computation
+- Entropy bonus encourages exploration
+- On-policy learning: collects trajectories, then optimizes multiple epochs
+- Gradient clipping for stability
+
 **Preprocessing (automatic):**
 - RGB → Grayscale
 - Resize to 84×84
@@ -174,12 +262,12 @@ All use 300,000 timesteps per run.
 
 ## Output Files
 
-After training:
+After DQN training:
 
 ```
 models/
-  └── gravitar_best.zip          # Best trained model
-  
+  └── gravitar_best.zip          # Best trained DQN model
+
 logs/gravitar_dqn/
   └── sweep/
       ├── exp_01_baseline/
@@ -192,9 +280,29 @@ logs/gravitar_dqn/
       └── exp_05_small_batch/...
 ```
 
+After PPO training:
+
+```
+models/
+  └── gravitar_ppo_best.zip     # Best trained PPO model
+
+logs/gravitar_ppo/
+  └── sweep/
+      ├── exp_01_baseline/
+      │   ├── seed_42/
+      │   ├── seed_43/
+      │   └── seed_44/
+      ├── exp_02_high_entropy/...
+      ├── exp_03_tight_clip/...
+      ├── exp_04_high_gae/...
+      └── exp_05_more_epochs/...
+```
+
 ---
 
 ## Customization
+
+### DQN
 
 Modify hyperparameters in `sweep_configs.json`:
 
@@ -214,6 +322,27 @@ Modify hyperparameters in `sweep_configs.json`:
 }
 ```
 
+### PPO
+
+Modify hyperparameters in `sweep_configs_ppo.json`:
+
+```json
+{
+  "name": "exp_custom",
+  "learning_rate": 2.5e-4,
+  "n_steps": 1024,
+  "batch_size": 128,
+  "n_epochs": 6,
+  "gamma": 0.99,
+  "gae_lambda": 0.95,
+  "clip_range": 0.2,
+  "ent_coef": 0.01,
+  "vf_coef": 0.5,
+  "max_grad_norm": 0.5,
+  "timesteps": 5000000
+}
+```
+
 ---
 
 ## Troubleshooting
@@ -230,6 +359,7 @@ Modify hyperparameters in `sweep_configs.json`:
 
 ## Key Parameters
 
+### DQN
 - **learning_rate**: How fast the agent learns (default 1e-4)
 - **buffer_size**: Memory of past experiences (default 50k-200k)
 - **batch_size**: Samples per update (32 or 64)
@@ -238,11 +368,23 @@ Modify hyperparameters in `sweep_configs.json`:
 - **exploration_fraction**: How long to explore (0.15 = first 45k steps of 300k)
 - **exploration_final_eps**: Minimum exploration rate (0.01 = always 1% random)
 
+### PPO
+- **learning_rate**: How fast the agent learns (default 2.5e-4 for Gravitar)
+- **n_steps**: Rollout buffer size (1024 steps per environment for Gravitar)
+- **batch_size**: Minibatch size for PPO updates (128 for Gravitar)
+- **n_epochs**: Number of optimization epochs per update (6 for Gravitar)
+- **gamma**: Future discount (0.99)
+- **gae_lambda**: GAE parameter for advantage estimation (0.95)
+- **clip_range**: PPO clipping parameter (0.2 = prevents large policy updates)
+- **ent_coef**: Entropy coefficient for exploration (0.01)
+- **vf_coef**: Value function loss coefficient (0.5)
+- **max_grad_norm**: Gradient clipping for stability (0.5)
+
 ---
 
 ## Author & License
 
-**Challenge:** Machine Learning — Atari DQN  
+**Challenge:** Machine Learning — Atari DQN & PPO  
 **Group:** Grupo 4  
 **Professor:** Prof. Carlos Andrés Sierra (cavirguezs@udistrital.edu.co)  
 **License:** GNU/GPL 3.0  
