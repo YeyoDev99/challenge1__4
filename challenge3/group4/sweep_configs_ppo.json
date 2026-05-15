@@ -12,7 +12,7 @@
     "ent_coef": 0.01,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_02_high_lr",
@@ -27,7 +27,7 @@
     "ent_coef": 0.01,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_03_low_lr",
@@ -42,7 +42,7 @@
     "ent_coef": 0.01,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_04_short_horizon",
@@ -57,7 +57,7 @@
     "ent_coef": 0.01,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_05_long_horizon",
@@ -72,7 +72,7 @@
     "ent_coef": 0.01,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_06_high_entropy",
@@ -87,7 +87,7 @@
     "ent_coef": 0.02,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_07_low_entropy",
@@ -102,7 +102,7 @@
     "ent_coef": 0.001,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_08_high_lr_high_entropy",
@@ -117,7 +117,7 @@
     "ent_coef": 0.02,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   },
   {
     "name": "exp_09_long_horizon_high_entropy",
@@ -132,6 +132,6 @@
     "ent_coef": 0.02,
     "vf_coef": 0.5,
     "max_grad_norm": 0.5,
-    "timesteps": 5000000
+    "timesteps": 500000
   }
 ]

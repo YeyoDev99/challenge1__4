@@ -293,7 +293,7 @@ def run_sweep(
     seed: int,
     base_log_dir: str,
     best_model_path: str,
-    num_seeds: int = 3,
+    num_seeds: int = 1,
 ) -> None:
     """Run all experiments defined in a JSON config file with multiple seeds.
 
