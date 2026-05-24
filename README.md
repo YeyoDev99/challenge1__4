@@ -3,48 +3,53 @@
 **Authors**: Yader Ibraldo Quiroga Torres, Rosa Alejandra Lopez Lizarazo, Diego Alejandro Garzon Rodriguez
 **Lecturer**: Carlos Andrés Sierra Virgüez
 **Environment**: ALE/Gravitar-v5
+**Institution**: Universidad Distrital Francisco José de Caldas
+**Date**: May 2026
 
-This repository contains implementations of Deep Q-Network (DQN) and Proximal Policy Optimization (PPO) agents for the Atari 2600 game Gravitar, as part of Challenges 1 and 3 of the Machine Learning course at Universidad Distrital Francisco José de Caldas.
+This repository contains implementations of Deep Q-Network (DQN) and Proximal Policy Optimization (PPO) agents for the Atari 2600 game Gravitar, as part of Challenges 1 and 3 of the Machine Learning course. The project compares off-policy (DQN) and on-policy (PPO) deep reinforcement learning algorithms on a physics-based environment requiring precise thrust control and gravity compensation.
 
 ---
 
 ## Quick Links
 
-- **[Challenge 1: DQN](README_CHALLENGE1.md)** - Deep Q-Network implementation and results
+- **[Challenge 1: DQN](challenge1/group4/README_CHALLENGE1.md)** - Deep Q-Network implementation and results
 - **[Challenge 3: PPO](challenge3/group4/README_CHALLENGE3.md)** - Proximal Policy Optimization implementation and results
-- **[Execution Guide](EXECUTION_GUIDE.md)** - Step-by-step commands for running experiments
-- **[IEEE Paper](article.tex)** - Comparative study of DQN vs PPO on Gravitar
+- **[IEEE Paper](challenge1/group4/article.tex)** - Comparative study of DQN vs PPO on Gravitar
+- **[Challenge 3 Checklist](challenge3/group4/CHECKLIST.md)** - Training commands and verification
 
 ---
 
-## Project Structure
+## Repository Structure
 
-**Root (Challenge 1 - DQN):**
-- `gravitar_dqn.py` — Main DQN training script
-- `sweep_configs.json` — 5 optimized DQN hyperparameter configurations
-- `README_CHALLENGE1.md` — Detailed DQN documentation
-
-**challenge3/group4/ (Challenge 3 - PPO):**
-- `gravitar_ppo.py` — Main PPO training script
-- `sweep_configs_ppo.json` — 9 optimized PPO hyperparameter configurations
-- `CHECKLIST.md` — Training commands, seeds, and comparative summary
-- `comparative_analysis_dqn_vs_ppo.md` — Comparative analysis template
-- `ieee_paper_dqn_to_ppo_gravitar.md` — IEEE paper template
-- `Challenge3.md` — Challenge 3 requirements document
-- `README_CHALLENGE3.md` — Detailed PPO documentation
-
-**Shared:**
-- `README.md` — This index file
-- `README_CHALLENGE1.md` — Challenge 1 documentation
-- `README_CHALLENGE3.md` — Challenge 3 documentation
-- `EXECUTION_GUIDE.md` - Complete execution guide for both challenges
-- `article.tex` — IEEE paper comparing DQN and PPO
-- `pyproject.toml` — Project metadata
-
-Generated at runtime:
-- `models/` — Trained model archives (`.zip`)
-- `logs/gravitar_dqn/` — DQN TensorBoard event files
-- `logs/gravitar_ppo/` — PPO TensorBoard event files
+```
+challenge1__4/
+├── README.md                           # This file - General repository overview
+│
+├── challenge1/
+│   └── group4/
+│       ├── README_CHALLENGE1.md       # Challenge 1 (DQN) detailed documentation
+│       ├── gravitar_dqn.py            # DQN training script (train, play, sweep, inspect)
+│       ├── sweep_configs.json         # DQN hyperparameter configurations (5 experiments)
+│       ├── article.tex                # IEEE paper comparing DQN and PPO
+│       ├── pyproject.toml             # Project metadata and dependencies
+│       ├── challenge1_4.pdf           # Challenge 1 requirements document
+│       ├── installation_por_gitbash.txt # Installation instructions for Git Bash
+│       ├── models/                    # Generated at runtime - DQN trained models
+│       └── logs/                      # Generated at runtime - DQN TensorBoard logs
+│
+├── challenge3/
+│   └── group4/
+│       ├── README_CHALLENGE3.md       # Challenge 3 (PPO) detailed documentation
+│       ├── CHECKLIST.md               # Training commands, seeds, comparative summary
+│       ├── gravitar_ppo.py            # PPO training script (train, play, sweep, inspect)
+│       ├── sweep_configs_ppo.json     # PPO hyperparameter configurations (9 experiments)
+│       ├── Challenge3.md              # Challenge 3 requirements document
+│       ├── challenge3_group4_paper.pdf # Challenge 3 paper (PDF)
+│       ├── comparative_analysis_dqn_vs_ppo.md  # Comparative analysis template
+│       ├── ieee_paper_dqn_to_ppo_gravitar.md  # IEEE paper template
+│       ├── models/                    # Generated at runtime - PPO trained models
+│       └── logs/                      # Generated at runtime - PPO TensorBoard logs
+```
 
 ---
 
@@ -85,6 +90,8 @@ pip install stable-baselines3 gymnasium[atari] ale-py opencv-python torch tensor
 ### Challenge 1 (DQN)
 
 ```bash
+cd challenge1/group4
+
 # Quick test
 python gravitar_dqn.py --mode train --model-path models/test_dqn --timesteps 10000
 
@@ -93,6 +100,8 @@ python gravitar_dqn.py --mode train --model-path models/gravitar_dqn_g4
 
 # Run sweep
 python gravitar_dqn.py --mode sweep --sweep-file sweep_configs.json --model-path models/gravitar_dqn_best
+
+cd ../..
 ```
 
 ### Challenge 3 (PPO)
@@ -101,18 +110,18 @@ python gravitar_dqn.py --mode sweep --sweep-file sweep_configs.json --model-path
 cd challenge3/group4
 
 # Quick test
-python gravitar_ppo.py --mode train --model-path ../../models/test_ppo --timesteps 10000
+python gravitar_ppo.py --mode train --model-path models/test_ppo --timesteps 10000
 
 # Train single model
-python gravitar_ppo.py --mode train --model-path ../../models/gravitar_ppo_g4
+python gravitar_ppo.py --mode train --model-path models/gravitar_ppo_g4
 
 # Run sweep
-python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-path ../../models/gravitar_ppo_best
+python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-path models/gravitar_ppo_best
 
 cd ../..
 ```
 
-For detailed instructions, see [EXECUTION_GUIDE.md](EXECUTION_GUIDE.md).
+For detailed instructions, see the challenge-specific READMEs linked above.
 
 ---
 
@@ -135,5 +144,5 @@ If you use this code, please cite:
 ## License
 
 This project is part of the Machine Learning course at Universidad Distrital Francisco José de Caldas.  
-**Date:** March 2026
+**Date:** May 2026
 
