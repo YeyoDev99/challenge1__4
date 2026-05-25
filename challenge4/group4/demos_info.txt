@@ -1,0 +1,22 @@
+Demonstration Dataset Metadata
+===============================
+
+Source Checkpoint: ../../challenge1/group4/models/gravitar_dqn_best.zip
+Number of Steps: 30,000
+Environment: ALE/Gravitar-v5
+Collection Seed: 42
+
+Demonstrating Policy: DQN (Challenge 1 best)
+Demonstrating Policy Mean Return: 335.7081
+Demonstrating Policy Std Return: ~50.0 (estimated)
+Demonstrating Policy Training Throughput: 6 FPS
+
+Collection Date: May 2026
+Collection Method: Greedy rollout (deterministic action selection)
+
+Notes:
+- Demonstrations collected from the best DQN checkpoint from Challenge 1
+- The DQN achieved a smoothed mean reward of 335.7081 on Gravitar-v5
+- Demonstrations include state-action pairs (s_t, a_t) for 30,000 environment steps
+- States are preprocessed (grayscale, 84x84, frame-stacked 4 frames)
+- Actions are discrete (18 possible actions for Gravitar)

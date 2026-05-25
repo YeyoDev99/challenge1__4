@@ -1,0 +1,101 @@
+[
+  {
+    "name": "exp_01_baseline",
+    "description": "Baseline GAIL configuration with BC warm-start",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_02_high_disc_lr",
+    "description": "Higher discriminator learning rate for faster adaptation",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 5e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_03_low_disc_lr",
+    "description": "Lower discriminator learning rate for stability",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 1e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_04_more_disc_updates",
+    "description": "More discriminator updates per rollout",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 5,
+    "horizon": 1024,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_05_no_bc_warmstart",
+    "description": "GAIL without BC warm-start (random initialization)",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.01,
+    "bc_warmstart": false,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_06_high_entropy",
+    "description": "Higher entropy coefficient for more exploration",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.02,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_07_low_entropy",
+    "description": "Lower entropy coefficient for more exploitation",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 1024,
+    "ent_coef": 0.001,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_08_long_horizon",
+    "description": "Longer rollout horizon for better credit assignment",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 2048,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  },
+  {
+    "name": "exp_09_short_horizon",
+    "description": "Shorter rollout horizon for more frequent updates",
+    "lr_policy": 2.5e-4,
+    "lr_disc": 3e-4,
+    "disc_updates_per_rollout": 3,
+    "horizon": 512,
+    "ent_coef": 0.01,
+    "bc_warmstart": true,
+    "timesteps": 5000000
+  }
+]

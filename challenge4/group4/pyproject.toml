@@ -1,0 +1,23 @@
+[project]
+name = "gravitar-gail"
+version = "0.1.0"
+description = "GAIL Implementation for ALE/Gravitar-v5 - Challenge 4"
+authors = [
+    {name = "Yader Ibraldo Quiroga Torres"},
+    {name = "Rosa Alejandra Lopez Lizarazo"},
+    {name = "Diego Alejandro Garzon Rodriguez"}
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.24.0",
+    "torch>=2.0.0",
+    "gymnasium[atari,accept-rom-license]>=0.29.1,<1.1.0",
+    "ale-py==0.10.1",
+    "stable-baselines3>=2.3,<3",
+    "opencv-python>=4.8",
+    "tensorboard",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
