@@ -14,7 +14,6 @@ This repository contains implementations of Deep Q-Network (DQN) and Proximal Po
 
 - **[Challenge 1: DQN](challenge1/group4/README_CHALLENGE1.md)** - Deep Q-Network implementation and results
 - **[Challenge 3: PPO](challenge3/group4/README_CHALLENGE3.md)** - Proximal Policy Optimization implementation and results
-- **[IEEE Paper](challenge1/group4/article.tex)** - Comparative study of DQN vs PPO on Gravitar
 - **[Challenge 3 Checklist](challenge3/group4/CHECKLIST.md)** - Training commands and verification
 
 ---
@@ -30,25 +29,20 @@ challenge1__4/
 │       ├── README_CHALLENGE1.md       # Challenge 1 (DQN) detailed documentation
 │       ├── gravitar_dqn.py            # DQN training script (train, play, sweep, inspect)
 │       ├── sweep_configs.json         # DQN hyperparameter configurations (5 experiments)
-│       ├── article.tex                # IEEE paper comparing DQN and PPO
 │       ├── pyproject.toml             # Project metadata and dependencies
 │       ├── challenge1_4.pdf           # Challenge 1 requirements document
-│       ├── installation_por_gitbash.txt # Installation instructions for Git Bash
 │       ├── models/                    # Generated at runtime - DQN trained models
 │       └── logs/                      # Generated at runtime - DQN TensorBoard logs
 │
-├── challenge3/
-│   └── group4/
-│       ├── README_CHALLENGE3.md       # Challenge 3 (PPO) detailed documentation
-│       ├── CHECKLIST.md               # Training commands, seeds, comparative summary
-│       ├── gravitar_ppo.py            # PPO training script (train, play, sweep, inspect)
-│       ├── sweep_configs_ppo.json     # PPO hyperparameter configurations (9 experiments)
-│       ├── Challenge3.md              # Challenge 3 requirements document
-│       ├── challenge3_group4_paper.pdf # Challenge 3 paper (PDF)
-│       ├── comparative_analysis_dqn_vs_ppo.md  # Comparative analysis template
-│       ├── ieee_paper_dqn_to_ppo_gravitar.md  # IEEE paper template
-│       ├── models/                    # Generated at runtime - PPO trained models
-│       └── logs/                      # Generated at runtime - PPO TensorBoard logs
+└── challenge3/
+    └── group4/
+        ├── README_CHALLENGE3.md       # Challenge 3 (PPO) detailed documentation
+        ├── CHECKLIST.md               # Training commands, seeds, comparative summary
+        ├── gravitar_ppo.py            # PPO training script (train, play, sweep, inspect)
+        ├── sweep_configs_ppo.json     # PPO hyperparameter configurations (9 experiments)
+        ├── challenge3_group4_paper.pdf # Challenge 3 paper (PDF)
+        ├── models/                    # Generated at runtime - PPO trained models
+        └── logs/                      # Generated at runtime - PPO TensorBoard logs
 ```
 
 ---
