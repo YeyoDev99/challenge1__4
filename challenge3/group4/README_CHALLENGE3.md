@@ -266,6 +266,9 @@ python gravitar_ppo.py --mode inspect --model-path ../../models/model_name
 ```
 
 ---
+## Video link:
+
+https://www.youtube.com/watch?v=mdflZN1Ldd8
 
 ## Citation
 

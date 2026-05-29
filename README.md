@@ -1,4 +1,4 @@
-# Gravitar DQN & PPO — Challenge 1 & 3 Machine Learning (Group 4)
+# Gravitar: DQN, PPO & GAIL — Machine Learning Challenges 1, 3 & 4 (Group 4)
 
 **Authors**: Yader Ibraldo Quiroga Torres, Rosa Alejandra Lopez Lizarazo, Diego Alejandro Garzon Rodriguez
 **Lecturer**: Carlos Andrés Sierra Virgüez
@@ -6,7 +6,12 @@
 **Institution**: Universidad Distrital Francisco José de Caldas
 **Date**: May 2026
 
-This repository contains implementations of Deep Q-Network (DQN) and Proximal Policy Optimization (PPO) agents for the Atari 2600 game Gravitar, as part of Challenges 1 and 3 of the Machine Learning course. The project compares off-policy (DQN) and on-policy (PPO) deep reinforcement learning algorithms on a physics-based environment requiring precise thrust control and gravity compensation.
+This repository contains comprehensive implementations of three deep reinforcement learning and imitation learning algorithms for the Atari 2600 game Gravitar, as part of Challenges 1, 3, and 4 of the Machine Learning course:
+- **Challenge 1**: Deep Q-Network (DQN) — off-policy value-based learning
+- **Challenge 3**: Proximal Policy Optimization (PPO) — on-policy actor-critic learning
+- **Challenge 4**: Generative Adversarial Imitation Learning (GAIL) — adversarial imitation learning
+
+All algorithms are evaluated on physics-based control requiring precise thrust management and gravity compensation.
 
 ---
 
@@ -14,7 +19,9 @@ This repository contains implementations of Deep Q-Network (DQN) and Proximal Po
 
 - **[Challenge 1: DQN](challenge1/group4/README_CHALLENGE1.md)** - Deep Q-Network implementation and results
 - **[Challenge 3: PPO](challenge3/group4/README_CHALLENGE3.md)** - Proximal Policy Optimization implementation and results
-- **[Challenge 3 Checklist](challenge3/group4/CHECKLIST.md)** - Training commands and verification
+- **[Challenge 3 Checklist](challenge3/group4/CHECKLIST.md)** - Training commands, seeds, and comparative analysis
+- **[Challenge 4: GAIL](challenge4/group4/README_CHALLENGE4.md)** - Generative Adversarial Imitation Learning implementation
+- **[Challenge 4 Checklist](challenge4/group4/CHECKLIST.md)** - Training commands and verification
 
 ---
 
@@ -30,19 +37,35 @@ challenge1__4/
 │       ├── gravitar_dqn.py            # DQN training script (train, play, sweep, inspect)
 │       ├── sweep_configs.json         # DQN hyperparameter configurations (5 experiments)
 │       ├── pyproject.toml             # Project metadata and dependencies
-│       ├── challenge1_4.pdf           # Challenge 1 requirements document
 │       ├── models/                    # Generated at runtime - DQN trained models
 │       └── logs/                      # Generated at runtime - DQN TensorBoard logs
 │
-└── challenge3/
+├── challenge3/
+│   └── group4/
+│       ├── README_CHALLENGE3.md       # Challenge 3 (PPO) detailed documentation
+│       ├── CHECKLIST.md               # Training commands, seeds, comparative summary
+│       ├── gravitar_ppo.py            # PPO training script (train, play, sweep, inspect)
+│       ├── sweep_configs_ppo.json     # PPO hyperparameter configurations (9 experiments)
+│       ├── models/                    # Generated at runtime - PPO trained models
+│       └── logs/                      # Generated at runtime - PPO TensorBoard logs
+│
+└── challenge4/
     └── group4/
-        ├── README_CHALLENGE3.md       # Challenge 3 (PPO) detailed documentation
-        ├── CHECKLIST.md               # Training commands, seeds, comparative summary
-        ├── gravitar_ppo.py            # PPO training script (train, play, sweep, inspect)
-        ├── sweep_configs_ppo.json     # PPO hyperparameter configurations (9 experiments)
-        ├── challenge3_group4_paper.pdf # Challenge 3 paper (PDF)
-        ├── models/                    # Generated at runtime - PPO trained models
-        └── logs/                      # Generated at runtime - PPO TensorBoard logs
+        ├── README_CHALLENGE4.md       # Challenge 4 (GAIL) detailed documentation
+        ├── CHECKLIST.md               # Training commands and verification
+        ├── gravitar_gail.py           # GAIL training script (collect, bc, gail, sweep)
+        ├── sweep_configs_gail.json    # GAIL hyperparameter configurations (9 experiments)
+        ├── pyproject.toml             # Project metadata and dependencies
+        ├── demos_ppo.npz              # Demonstration dataset from PPO policy
+        ├── bc_policy_ppo.pt           # Behavioral Cloning policy (warmstart)
+        ├── gail_metrics.npz           # Computed GAIL evaluation metrics
+        ├── models/                    # Generated at runtime - GAIL trained models
+        │   ├── bc_policy_seed42.pt    # Behavioral Cloning reference policy
+        │   ├── gail_policy.pt         # Final trained GAIL policy
+        │   ├── gail_discriminator.pt  # Final trained discriminator
+        │   └── gail/                  # Sweep results (exp_01-exp_09)
+        ├── logs/                      # Generated at runtime - GAIL TensorBoard logs
+        └── rl_env/                    # Virtual environment (optional)
 ```
 
 ---
@@ -115,7 +138,30 @@ python gravitar_ppo.py --mode sweep --sweep-file sweep_configs_ppo.json --model-
 cd ../..
 ```
 
-For detailed instructions, see the challenge-specific READMEs linked above.
+### Challenge 4 (GAIL)
+
+```bash
+cd challenge4/group4
+
+# Collect demonstrations from PPO policy
+python gravitar_gail.py --mode collect --expert-policy models/gravitar_ppo_best.zip --num-demos 10
+
+# Train Behavioral Cloning policy (warmstart)
+python gravitar_gail.py --mode bc --demos demos_ppo.npz --model-path models/bc_policy_ppo.pt
+
+# Quick test GAIL training
+python gravitar_gail.py --mode gail --demo-path demos_ppo.npz --model-path models/test_gail --timesteps 10000
+
+# Train single GAIL model
+python gravitar_gail.py --mode gail --demo-path demos_ppo.npz --model-path models/gravitar_gail_g4
+
+# Run sweep
+python gravitar_gail.py --mode sweep --sweep-file sweep_configs_gail.json --demo-path demos_ppo.npz --model-path models/gravitar_gail_best
+
+cd ../..
+```
+
+For detailed instructions and parameter explanations, see the challenge-specific READMEs linked above.
 
 ---
 
@@ -124,12 +170,12 @@ For detailed instructions, see the challenge-specific READMEs linked above.
 If you use this code, please cite:
 
 ```bibtex
-@article{challenge_dqn_ppo,
-  title={Empirical Evaluation of On-Policy vs. Off-Policy Deep Reinforcement Learning in Gravity-Driven Physics Environments: A Comparative Study of DQN and PPO on ALE/Gravitar-v5},
+@article{challenge_dqn_ppo_gail,
+  title={Empirical Comparison of Deep Reinforcement Learning and Imitation Learning Algorithms on ALE/Gravitar-v5: DQN, PPO, and GAIL},
   author={Quiroga Torres, Yader Ibraldo and Lopez Lizarazo, Rosa Alejandra and Garzon Rodriguez, Diego Alejandro},
   journal={Universidad Distrital Francisco José de Caldas},
   year={2026},
-  note={Machine Learning Course - Challenges 1 \& 3}
+  note={Machine Learning Course - Challenges 1, 3 \& 4}
 }
 ```
 
@@ -138,5 +184,6 @@ If you use this code, please cite:
 ## License
 
 This project is part of the Machine Learning course at Universidad Distrital Francisco José de Caldas.  
-**Date:** May 2026
+**Challenges**: 1, 3 & 4  
+**Date**: May 2026
 
