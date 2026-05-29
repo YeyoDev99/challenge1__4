@@ -36,6 +36,24 @@ Generated at runtime:
 
 ## Installation
 
+### Option A: Using Poetry (Recommended)
+
+```bash
+# Install Poetry if not already installed
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Navigate to the project directory
+cd challenge4/group4
+
+# Install dependencies
+poetry install
+
+# Activate virtual environment
+poetry shell
+```
+
+### Option B: Using pip
+
 ```bash
 # Create virtual environment (if not already created)
 python -m venv venv_gravitar
