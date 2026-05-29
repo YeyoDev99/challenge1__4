@@ -8,17 +8,17 @@ authors = [
     "Diego Alejandro Garzon Rodriguez"
 ]
 readme = "README.md"
-requires-python = ">=3.8"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.11"
 numpy = ">=1.24.0"
 torch = ">=2.0.0"
 gymnasium = {version = ">=0.29.1,<1.1.0", extras = ["atari", "accept-rom-license"]}
 ale-py = "==0.10.1"
-stable-baselines3 = ">=2.3,<3"
+stable-baselines3 = ">=2.8.0"
 opencv-python = ">=4.8"
 tensorboard = "^2.14"
+torch-directml = "^0.2.5.dev240914"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4"

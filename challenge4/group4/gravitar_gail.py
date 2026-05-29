@@ -15,6 +15,7 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.distributions import Categorical
 from torch.utils.data import DataLoader, TensorDataset
+import torch_directml
 
 gym.register_envs(ale_py)  # register ALE environments in the gymnasium namespace
 
@@ -193,12 +194,12 @@ def collect_demonstrations(env_id: str, checkpoint_path: str,
     else:
         model = PPO.load(checkpoint_path, device=device)
     
-    model.set_learning_starts(0)  # Disable exploration
+    #model.set_learning_starts(0)  # Disable exploration
     model.exploration_rate = 0.0  # Force greedy policy
     
     env = make_env(env_id, seed=seed)
     obs_buf, act_buf = [], []
-    obs, _ = env.reset()
+    obs = env.reset()
     
     for i in range(n_steps):
         # SB3 predict returns deterministic action by default
@@ -207,9 +208,9 @@ def collect_demonstrations(env_id: str, checkpoint_path: str,
         obs_buf.append(obs.copy())
         act_buf.append(action)
 
-        obs, _, terminated, truncated, _ = env.step(action)
+        obs, terminated, truncated, _ = env.step(action)
         if terminated or truncated:
-            obs, _ = env.reset()
+            obs = env.reset()
         
         if (i + 1) % 5000 == 0:
             print(f"  Collected {i + 1}/{n_steps} steps")
@@ -236,14 +237,34 @@ def train_bc(env_id: str, demos_path: str = "demos.npz",
     print(f"Training BC baseline from {demos_path}...")
     
     data = np.load(demos_path)
-    obs_t = torch.tensor(data["observations"], dtype=torch.float32)
-    act_t = torch.tensor(data["actions"], dtype=torch.long)
+    obs_data = data["observations"]  # Shape: (n_steps, 1, 84, 84, 4)
+    act_data = data["actions"]       # Shape: (n_steps,) o (n_steps, 1)
+    
+    # Reorganizar observaciones
+    obs_data = obs_data.squeeze(1)  # (n_steps, 84, 84, 4)
+    obs_data = np.transpose(obs_data, (0, 3, 1, 2))  # (n_steps, 4, 84, 84)
+    
+    # Asegurar que acciones sean 1D
+    if act_data.ndim > 1:
+        act_data = act_data.squeeze()  # Eliminar dimensiones extras
+    
+    print(f"Observations shape: {obs_data.shape}")
+    print(f"Actions shape: {act_data.shape}")
+    
+    obs_t = torch.tensor(obs_data, dtype=torch.float32)
+    act_t = torch.tensor(act_data, dtype=torch.long)
+    
+    # Verificar formas
+    print(f"Actions tensor shape: {act_t.shape}")
+    
     dataset = TensorDataset(obs_t, act_t)
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
-    env = make_env(env_id)()
+    # Crear entorno para obtener el número de acciones
+    env = make_env(env_id)
     n_actions = env.action_space.n
     env.close()
+    print(f"Number of actions: {n_actions}")
 
     model = AtariActorCritic(n_actions).to(device)
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -254,6 +275,8 @@ def train_bc(env_id: str, demos_path: str = "demos.npz",
         for obs_b, act_b in loader:
             obs_b, act_b = obs_b.to(device), act_b.to(device)
             logits, _ = model(obs_b)
+            # Asegurar que act_b sea 1D
+            act_b = act_b.squeeze().long()
             loss = criterion(logits, act_b)
             optimizer.zero_grad()
             loss.backward()
@@ -291,13 +314,22 @@ def train_gail(env_id, demos_path="demos.npz",
     
     # Load demonstrations
     data = np.load(demos_path)
-    demo_obs = torch.tensor(data["observations"], dtype=torch.float32)
-    demo_act = torch.tensor(data["actions"], dtype=torch.long)
+    demo_obs = data["observations"]  # (n_steps, 1, 84, 84, 4)
+    demo_act = data["actions"]
+    
+    # Reorganizar demostraciones al formato correcto (n_steps, 4, 84, 84)
+    if demo_obs.ndim == 5:  # (n, 1, 84, 84, 4)
+        demo_obs = demo_obs.squeeze(1)  # (n, 84, 84, 4)
+        demo_obs = np.transpose(demo_obs, (0, 3, 1, 2))  # (n, 4, 84, 84)
+    
+    demo_obs = torch.tensor(demo_obs, dtype=torch.float32)
+    demo_act = torch.tensor(demo_act, dtype=torch.long)
     n_demos = len(demo_obs)
     print(f"Loaded {n_demos} demonstration steps")
 
     env = build_training_environment(seed=seed)
     n_actions = env.action_space.n
+    print(f"Number of actions: {n_actions}")
 
     # Initialize policy
     policy = AtariActorCritic(n_actions).to(device)
@@ -314,19 +346,31 @@ def train_gail(env_id, demos_path="demos.npz",
     opt_disc = optim.Adam(disc.parameters(), lr=lr_disc)
     bce = torch.nn.BCELoss()
 
-    obs, _ = env.reset()
+    # Función auxiliar para preprocesar observaciones
+    def preprocess_obs(obs):
+        """Convert SB3 observation (1,84,84,4) to PyTorch format (4,84,84)"""
+        if isinstance(obs, np.ndarray):
+            if obs.shape == (1, 84, 84, 4):
+                obs = obs.squeeze(0)  # (84,84,4)
+                obs = np.transpose(obs, (2, 0, 1))  # (4,84,84)
+        return obs
+
+    # Inicializar con preprocesamiento
+    obs = env.reset()
+    obs = preprocess_obs(obs)
     ep_return = 0.0
     all_returns = []
     disc_acc_history = []
 
     for global_step in range(0, total_steps, horizon):
-
         # ---- rollout collection ----
         obs_buf, act_buf, logp_buf = [], [], []
-        rew_buf, done_buf, val_buf = [], [], []
+        val_buf = []
 
         for _ in range(horizon):
+            # Convertir a tensor
             obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(device)
+            
             with torch.no_grad():
                 logits, value = policy(obs_t)
                 dist = Categorical(logits=logits)
@@ -337,21 +381,29 @@ def train_gail(env_id, demos_path="demos.npz",
             logp_buf.append(dist.log_prob(action))
             val_buf.append(value.squeeze())
 
-            obs, env_reward, terminated, truncated, _ = env.step(action.item())
-            done = terminated or truncated
-            done_buf.append(done)
-            ep_return += env_reward
+            # Paso en el entorno
+            obs, reward, terminated, info = env.step([action.item()])
+            
+            # Preprocesar la nueva observación
+            obs = preprocess_obs(obs)
+            
+            # Extraer valores (pueden ser arrays)
+            reward_val = reward[0] if isinstance(reward, (list, np.ndarray)) else reward
+            done = terminated[0] if isinstance(terminated, (list, np.ndarray)) else terminated
+            
+            ep_return += reward_val
 
             if done:
                 all_returns.append(ep_return)
                 ep_return = 0.0
-                obs, _ = env.reset()
+                obs = env.reset()
+                obs = preprocess_obs(obs)
 
         # ---- adversarial reward (replace env reward) ----
         obs_stack = torch.stack(obs_buf).to(device)
         with torch.no_grad():
             d_scores = disc(obs_stack)  # P(expert | s)
-            # reward: log D(s,a) -- agent wants to look like the expert
+            # reward: log D(s) -- agent wants to look like the expert
             adv_rewards = torch.log(d_scores + 1e-8).cpu()
         rew_buf = adv_rewards.tolist()
 
@@ -360,13 +412,10 @@ def train_gail(env_id, demos_path="demos.npz",
             obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(device)
             _, nv = policy(obs_t)
             advantages, returns = compute_gae(
-                rew_buf, val_buf, done_buf, nv.item(), gamma, gae_lambda
+                rew_buf, val_buf, [False] * len(rew_buf), nv.item(), gamma, gae_lambda
             )
 
         # ---- discriminator update ----
-        act_one_hot = F.one_hot(
-            torch.stack(act_buf), n_actions).float().to(device)
-
         for _ in range(disc_updates_per_rollout):
             # sample expert mini-batch
             idx_e = torch.randint(0, n_demos, (batch_size,))
@@ -393,7 +442,8 @@ def train_gail(env_id, demos_path="demos.npz",
         # ---- PPO update ----
         act_t = torch.stack(act_buf).to(device)
         logp_t = torch.stack(logp_buf).detach().to(device)
-        adv_t = (torch.tensor(advantages) - torch.tensor(advantages).mean()) / (torch.tensor(advantages).std() + 1e-8)
+        adv_t = torch.tensor(advantages)
+        adv_t = (adv_t - adv_t.mean()) / (adv_t.std() + 1e-8)
         ret_t = torch.tensor(returns).to(device)
 
         idx = torch.randperm(horizon)
@@ -417,15 +467,14 @@ def train_gail(env_id, demos_path="demos.npz",
                 torch.nn.utils.clip_grad_norm_(policy.parameters(), max_grad_norm)
                 opt_policy.step()
 
-        if len(all_returns) % 10 == 0 and all_returns:
-            mean_ret = np.mean(all_returns[-100:])
+        if len(all_returns) > 0 and (global_step // horizon) % 10 == 0:
+            mean_ret = np.mean(all_returns[-100:]) if len(all_returns) >= 100 else np.mean(all_returns)
             print(f"step={global_step:7d} ret={mean_ret:7.1f} "
                   f"disc_loss={loss_disc.item():.3f} "
                   f"disc_acc={d_acc.item():.2f}")
 
     env.close()
     return policy, disc, all_returns, disc_acc_history
-
 
 # Sweep Function
 

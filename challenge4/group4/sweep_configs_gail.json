@@ -8,7 +8,7 @@
     "horizon": 1024,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_02_high_disc_lr",
@@ -19,7 +19,7 @@
     "horizon": 1024,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_03_low_disc_lr",
@@ -30,7 +30,7 @@
     "horizon": 1024,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_04_more_disc_updates",
@@ -41,7 +41,7 @@
     "horizon": 1024,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_05_no_bc_warmstart",
@@ -52,7 +52,7 @@
     "horizon": 1024,
     "ent_coef": 0.01,
     "bc_warmstart": false,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_06_high_entropy",
@@ -63,7 +63,7 @@
     "horizon": 1024,
     "ent_coef": 0.02,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_07_low_entropy",
@@ -74,7 +74,7 @@
     "horizon": 1024,
     "ent_coef": 0.001,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_08_long_horizon",
@@ -85,7 +85,7 @@
     "horizon": 2048,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   },
   {
     "name": "exp_09_short_horizon",
@@ -96,6 +96,6 @@
     "horizon": 512,
     "ent_coef": 0.01,
     "bc_warmstart": true,
-    "timesteps": 5000000
+    "timesteps": 50000
   }
 ]

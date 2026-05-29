@@ -1,0 +1,17 @@
+{
+  "exp_01_baseline": {
+    "config": {
+      "name": "exp_01_baseline",
+      "description": "Baseline GAIL configuration with BC warm-start",
+      "lr_policy": 0.00025,
+      "lr_disc": 0.0003,
+      "disc_updates_per_rollout": 3,
+      "horizon": 1024,
+      "ent_coef": 0.01,
+      "bc_warmstart": true,
+      "timesteps": 50000
+    },
+    "results": [
+      {
+        "seed": 42,
+        "final_return": 
