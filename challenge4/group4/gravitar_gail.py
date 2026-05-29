@@ -18,6 +18,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 gym.register_envs(ale_py)  # register ALE environments in the gymnasium namespace
 
+from stable_baselines3 import DQN, PPO
 from stable_baselines3.common.atari_wrappers import AtariWrapper
 from stable_baselines3.common.env_util import make_atari_env
 from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack
@@ -33,13 +34,10 @@ N_STACK = 4
 # Environment Builders
 
 def make_env(env_id: str, seed: int = 0):
-    """Create a single preprocessed Atari environment."""
-    def _init():
-        env = gym.make(env_id, render_mode="rgb_array")
-        env = AtariWrapper(env)
-        env.seed(seed)
-        return env
-    return _init
+    """Create a single preprocessed Atari environment using SB3's make_atari_env."""
+    env = make_atari_env(env_id, n_envs=1, seed=seed, wrapper_kwargs={"clip_reward": False})
+    env = VecFrameStack(env, n_stack=N_STACK)
+    return env
 
 
 def build_training_environment(seed: int) -> VecFrameStack:
@@ -182,30 +180,31 @@ def collect_demonstrations(env_id: str, checkpoint_path: str,
                           n_steps: int = 30_000, seed: int = 0,
                           device: str = "cpu") -> dict:
     """
-    Roll out a saved policy and record (obs, action) pairs.
+    Roll out a saved SB3 policy and record (obs, action) pairs.
 
     Returns a dict with keys 'observations' and 'actions',
     each a numpy array of shape (n_steps, ...).
     """
     print(f"Collecting {n_steps} demonstration steps from {checkpoint_path}...")
     
-    env = make_env(env_id, seed=seed)()
-    n_actions = env.action_space.n
-
-    model = AtariActorCritic(n_actions).to(device)
-    model.load_state_dict(torch.load(checkpoint_path, map_location=device))
-    model.eval()
-
+    # Load SB3 model (supports both DQN and PPO)
+    if "dqn" in checkpoint_path.lower():
+        model = DQN.load(checkpoint_path, device=device)
+    else:
+        model = PPO.load(checkpoint_path, device=device)
+    
+    model.set_learning_starts(0)  # Disable exploration
+    model.exploration_rate = 0.0  # Force greedy policy
+    
+    env = make_env(env_id, seed=seed)
     obs_buf, act_buf = [], []
     obs, _ = env.reset()
     
     for i in range(n_steps):
-        obs_t = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).to(device)
-        with torch.no_grad():
-            logits, _ = model(obs_t)
-            action = logits.argmax(dim=-1).item()  # greedy / deterministic
+        # SB3 predict returns deterministic action by default
+        action, _ = model.predict(obs, deterministic=True)
 
-        obs_buf.append(obs)
+        obs_buf.append(obs.copy())
         act_buf.append(action)
 
         obs, _, terminated, truncated, _ = env.step(action)

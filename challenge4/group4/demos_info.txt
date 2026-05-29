@@ -1,22 +1,30 @@
 Demonstration Dataset Metadata
 ===============================
 
-Source Checkpoint: ../../challenge1/group4/models/gravitar_dqn_best.zip
+Source Checkpoint (DQN): ../../challenge1/group4/models/best.zip
+Source Checkpoint (PPO): ../../challenge3/group4/models/gravitar_ppo.zip
 Number of Steps: 30,000
 Environment: ALE/Gravitar-v5
 Collection Seed: 42
 
-Demonstrating Policy: DQN (Challenge 1 best)
-Demonstrating Policy Mean Return: 335.7081
-Demonstrating Policy Std Return: ~50.0 (estimated)
-Demonstrating Policy Training Throughput: 6 FPS
+Demonstrating Policy (DQN): DQN (Challenge 1 best)
+Demonstrating Policy Mean Return (DQN): 335.7081
+Demonstrating Policy Std Return (DQN): ~50.0 (estimated)
+Demonstrating Policy Training Throughput (DQN): 6 FPS
+
+Demonstrating Policy (PPO): PPO (Challenge 3 best)
+Demonstrating Policy Mean Return (PPO): 374.7062
+Demonstrating Policy Std Return (PPO): ~50.0 (estimated)
+Demonstrating Policy Training Throughput (PPO): 171 FPS
 
 Collection Date: May 2026
-Collection Method: Greedy rollout (deterministic action selection)
+Collection Method: Greedy rollout (deterministic action selection via SB3 predict)
 
 Notes:
-- Demonstrations collected from the best DQN checkpoint from Challenge 1
+- Demonstrations collected from the best DQN checkpoint (best.zip) OR best PPO checkpoint (gravitar_ppo.zip)
 - The DQN achieved a smoothed mean reward of 335.7081 on Gravitar-v5
+- The PPO achieved a smoothed mean reward of 374.7062 on Gravitar-v5
 - Demonstrations include state-action pairs (s_t, a_t) for 30,000 environment steps
 - States are preprocessed (grayscale, 84x84, frame-stacked 4 frames)
 - Actions are discrete (18 possible actions for Gravitar)
+- Models loaded using SB3's DQN.load() and PPO.load() methods for compatibility

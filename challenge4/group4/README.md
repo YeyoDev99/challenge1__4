@@ -61,11 +61,17 @@ pip install numpy torch "gymnasium[atari,accept-rom-license]>=0.29.1,<1.1.0" \
 First, collect demonstrations from a trained checkpoint (DQN from Challenge 1 or PPO from Challenge 3):
 
 ```bash
-# Collect 30,000 demonstration steps from best DQN checkpoint
+# Option A: Collect from best DQN checkpoint (Challenge 1)
 python gravitar_gail.py --mode collect \
-    --checkpoint-path ../../challenge1/group4/models/gravitar_dqn_best.zip \
+    --checkpoint-path ../../challenge1/group4/models/best.zip \
     --n-steps 30000 \
     --demos-path demos.npz
+
+# Option B: Collect from best PPO checkpoint (Challenge 3)
+python gravitar_gail.py --mode collect \
+    --checkpoint-path ../../challenge3/group4/models/gravitar_ppo.zip \
+    --n-steps 30000 \
+    --demos-path demos_ppo.npz
 ```
 
 ### Step 2: Train Behavioral Cloning (BC) Baseline
@@ -73,10 +79,17 @@ python gravitar_gail.py --mode collect \
 Train the BC baseline to establish a supervised learning lower bound:
 
 ```bash
+# If using DQN demonstrations
 python gravitar_gail.py --mode bc \
     --demos-path demos.npz \
     --bc-epochs 25 \
     --bc-model-path bc_policy.pt
+
+# If using PPO demonstrations
+python gravitar_gail.py --mode bc \
+    --demos-path demos_ppo.npz \
+    --bc-epochs 25 \
+    --bc-model-path bc_policy_ppo.pt
 ```
 
 ### Step 3: Train GAIL
@@ -84,11 +97,19 @@ python gravitar_gail.py --mode bc \
 Train GAIL with BC warm-start:
 
 ```bash
+# If using DQN demonstrations
 python gravitar_gail.py --mode gail \
     --demos-path demos.npz \
     --bc-warmstart bc_policy.pt \
-    --total-steps 5000000 \
+    --total-steps 500000 \
     --log-dir logs/gail
+
+# If using PPO demonstrations
+python gravitar_gail.py --mode gail \
+    --demos-path demos_ppo.npz \
+    --bc-warmstart bc_policy_ppo.pt \
+    --total-steps 500000 \
+    --log-dir logs/gail_ppo
 ```
 
 ### Step 4: Run Full Sweep
@@ -96,9 +117,16 @@ python gravitar_gail.py --mode gail \
 Run hyperparameter sweep across 9 configurations × 3 seeds:
 
 ```bash
+# If using DQN demonstrations
 python gravitar_gail.py --mode sweep \
     --sweep-file sweep_configs_gail.json \
     --demos-path demos.npz \
+    --seeds 42 43 44
+
+# If using PPO demonstrations
+python gravitar_gail.py --mode sweep \
+    --sweep-file sweep_configs_gail.json \
+    --demos-path demos_ppo.npz \
     --seeds 42 43 44
 ```
 
